@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Medication & Health Information Log</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Print-specific styles to ensure the worksheet looks perfect on paper */
+        @media print {
+            body { background-color: white; color: black; }
+            .no-print { display: none !important; }
+            
+            /* Backgrounds */
+            .print-bg { background-color: #f3f4f6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
+            /* General borders */
+            .print-border { border: 1px solid black !important; }
+            
+            /* CHROME PRINT BUG FIX: 
+               page-break-inside: avoid on tr causes missing horizontal borders in collapsed tables.
+               Fix by separating borders and manually drawing grid lines. */
+            table.print-border { 
+                border-collapse: separate !important; 
+                border-spacing: 0 !important; 
+                border-top: 1px solid black !important;
+                border-left: 1px solid black !important;
+                border-bottom: none !important;
+                border-right: none !important;
+                page-break-inside: auto;
+            }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            th.print-border, td.print-border { 
+                border-bottom: 1px solid black !important; 
+                border-right: 1px solid black !important; 
+                border-top: none !important;
+                border-left: none !important;
+            }
+            
+            @page { margin: 0.5in; }
+            
+            /* Input styling for print */
+            input.print-border {
+                border: 1px solid black !important;
+                background: transparent !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+            
+            .print-border-b input { 
+                border-bottom: 1px solid black !important; 
+                border-top: none !important; 
+                border-left: none !important; 
+                border-right: none !important; 
+                background: transparent !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+            
+            /* Table inputs need to be invisible containers */
+            .table-input { 
+                border: none !important; 
+                background: transparent !important; 
+                color: black !important;
+                box-shadow: none !important;
+                height: auto !important; 
+                padding-left: 0.25rem !important;
+            }
+        }
+        
+        /* Ensures table rows are tall enough for handwriting */
+        .write-row { height: 3.5rem; }
+        
+        /* Interactive Input Styles for Web */
+        .table-input { width: 100%; height: 100%; background-color: transparent; border: none; outline: none; padding: 0.5rem; color: #111827; }
+        .table-input:focus { background-color: #f4f9fd; box-shadow: inset 0 0 0 2px #7eb7e4; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans text-gray-900">
+
+    <!-- Action Bar (Hidden when printing) -->
+    <div class="max-w-5xl mx-auto mb-6 flex justify-end no-print">
+        <button onclick="window.print()" class="bg-[#7eb7e4] hover:opacity-90 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-200 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+            </svg>
+            Print / Save as PDF
+        </button>
+    </div>
+
+    <!-- Printable Worksheet Area -->
+    <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-xl p-8 print-border border border-gray-200">
+        
+        <!-- Header Section -->
+        <div class="border-b-4 border-[#7eb7e4] pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Medication & Health Information Log</h1>
+                <p class="text-gray-600 mt-1 italic">Provide this list to the attending nurse immediately upon hospital admission.</p>
+            </div>
+            <div class="text-right print-border-b">
+                <p class="font-bold text-sm uppercase text-gray-500 mb-1">Date Last Updated:</p>
+                <input type="text" placeholder="MM/DD/YYYY" class="border-b border-gray-400 w-40 h-6 bg-transparent outline-none focus:border-[#7eb7e4] text-gray-900 text-right px-1">
+            </div>
+        </div>
+
+        <!-- Section 1: Patient Basics & Contacts -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-8">
+            <div>
+                <label class="block font-bold text-sm text-gray-700 mb-1">Patient Name</label>
+                <input type="text" class="border border-gray-300 rounded print-border p-2 h-10 w-full bg-transparent focus:outline-none focus:ring-2 focus:ring-[#7eb7e4]">
+            </div>
+            <div>
+                <label class="block font-bold text-sm text-gray-700 mb-1">Date of Birth</label>
+                <input type="text" class="border border-gray-300 rounded print-border p-2 h-10 w-full bg-transparent focus:outline-none focus:ring-2 focus:ring-[#7eb7e4]" placeholder="MM/DD/YYYY">
+            </div>
+            <div>
+                <label class="block font-bold text-sm text-gray-700 mb-1">Primary Caregiver / Emergency Contact (Name & Phone)</label>
+                <input type="text" class="border border-gray-300 rounded print-border p-2 h-10 w-full bg-transparent focus:outline-none focus:ring-2 focus:ring-[#7eb7e4]">
+            </div>
+            <div>
+                <label class="block font-bold text-sm text-gray-700 mb-1">Primary Care Doctor (Name & Phone)</label>
+                <input type="text" class="border border-gray-300 rounded print-border p-2 h-10 w-full bg-transparent focus:outline-none focus:ring-2 focus:ring-[#7eb7e4]">
+            </div>
+        </div>
+
+        <!-- Section 2: Allergies -->
+        <div class="mb-8 border-2 border-[#f15629] bg-[#fef0ec] p-4 rounded-lg print-border print-bg">
+            <h2 class="text-lg font-bold text-[#f15629] mb-2 uppercase flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                Known Allergies & Adverse Reactions
+            </h2>
+            <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+                <div class="border-b border-[#f15629] h-8 flex items-end print-border-b"><span class="text-xs text-[#f15629] mb-1 mr-2 font-bold">1.</span><input type="text" class="flex-1 bg-transparent border-none outline-none text-gray-900 pb-1 font-medium"></div>
+                <div class="border-b border-[#f15629] h-8 flex items-end print-border-b"><span class="text-xs text-[#f15629] mb-1 mr-2 font-bold">3.</span><input type="text" class="flex-1 bg-transparent border-none outline-none text-gray-900 pb-1 font-medium"></div>
+                <div class="border-b border-[#f15629] h-8 flex items-end print-border-b"><span class="text-xs text-[#f15629] mb-1 mr-2 font-bold">2.</span><input type="text" class="flex-1 bg-transparent border-none outline-none text-gray-900 pb-1 font-medium"></div>
+                <div class="border-b border-[#f15629] h-8 flex items-end print-border-b"><span class="text-xs text-[#f15629] mb-1 mr-2 font-bold">4.</span><input type="text" class="flex-1 bg-transparent border-none outline-none text-gray-900 pb-1 font-medium"></div>
+            </div>
+        </div>
+
+        <!-- Section 3: Medication Table -->
+        <div class="mb-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Current Medications & Supplements</h2>
+            <p class="text-sm text-gray-600 mb-3">Include all prescriptions, over-the-counter drugs, vitamins, and herbal supplements.</p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-400 print-border text-sm">
+                    <thead>
+                        <tr class="bg-gray-100 print-bg">
+                            <th class="border border-gray-400 print-border p-2 text-left w-1/4">Medication / Supplement Name</th>
+                            <th class="border border-gray-400 print-border p-2 text-left w-1/12">Dose<br><span class="text-xs font-normal text-gray-500">(e.g., 50mg)</span></th>
+                            <th class="border border-gray-400 print-border p-2 text-left w-1/12">Route<br><span class="text-xs font-normal text-gray-500">(Pill, Patch)</span></th>
+                            <th class="border border-gray-400 print-border p-2 text-left w-1/6">Frequency & Time<br><span class="text-xs font-normal text-gray-500">(e.g., 1x daily, morning)</span></th>
+                            <th class="border border-gray-400 print-border p-2 text-left w-1/4">Reason for Taking<br><span class="text-xs font-normal text-gray-500">(e.g., Blood Pressure)</span></th>
+                            <th class="border border-gray-400 print-border p-2 text-left w-1/6">Prescribing Doctor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Generate 25 blank, fillable rows -->
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                        <tr class="write-row"><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td><td class="border border-gray-400 print-border p-0"><input type="text" class="table-input"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        <!-- Footer -->
+        <div class="mt-8 pt-6 border-t-4 border-[#7eb7e4]">
+            <p class="text-sm text-gray-600 text-center mb-6">
+                <strong>Important:</strong> Update this list whenever a medication or dosage changes. Bring this physical copy with you during transitions of care to ensure safe and accurate treatment.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-between items-center text-lg font-bold">
+                <span class="text-[#7eb7e4]">caregivingclarified.com</span>
+                <span class="text-[#f15629]">YouTube: @caregivingclarified</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
